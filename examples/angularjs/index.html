@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html data-ng-app="demo">
+<head>
+	<title>Spinner Example - AngularJS</title>
+	<link rel="stylesheet" type="text/css" href="../../dist/css/spinner.css">
+	<style type="text/css">
+		.page {
+			max-width: 900px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		.examples {
+			display: flex;
+			/*justify-content: center;*/
+			flex-wrap: wrap;
+			margin-bottom: 3rem;
+		}
+		.example {
+			margin-left: 1rem;
+			margin-right: 1rem;
+			max-width: 12rem;
+		}
+		.example__box {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+		.example--track-color .spinner__track {
+			color: hsla(0, 0%, 0%, 0.1);
+		}
+		.example--fill-color .spinner__track {
+			color: hsla(0, 0%, 0%, 0.1);
+			background-color: hsla(0, 0%, 0%, 0.05);
+		}
+		.example--bar-color .spinner__left:after,
+		.example--bar-color .spinner__right:after {
+			border-color: red;
+		}
+		[data-spinner-toggle] {
+			margin-bottom: 0.5rem;
+		}
+		.example--position {
+			max-width: 24rem;
+		}
+		.example--position .example__box,
+		.example--slide .example__box {
+			height: 20rem;
+			width: 20rem;
+			background-color: hsla(0, 0%, 80%, 0.5);
+			position: relative;
+		}
+		.example--slide .example__box {
+			overflow: hidden;
+		}
+	</style>
+</head>
+<body ng-controller="appCtrl">
+	<div class="page">
+		<div class="page__intro">
+			<h1 class="page__title">Spinner brik - AngularJS</h1>
+			<p style="margin-bottom: 3rem;">This example illustrates using Spinner in AngularJS.</p>
+		</div>
+
+		<h2>Base</h2>
+		<div class="examples">
+			<div class="example">
+				<h3>Indeterminate progress spinner</h3>
+				<p>Indeterminate spinners only activate with the <code>--is-spinning</code> modifier class.</p>
+				<div class="example__box">
+					<p><button type="button" data-spinner-toggle="indeterminate">Toggle</button></p>
+					<spinner options="{id: 'indeterminate', mods: ['active']}"></spinner>
+				</div>
+			</div>
+
+			<div class="example">
+				<h3>Static determinate progress</h3>
+				<p>Determinate spinners do not need the <code>--is-spinning</code> modifier. They are active when the <code>[data-progress]</code> attribute exists.</p>
+				<div class="example__box">
+					<p><input data-sample-determinate-input="determinate-static" type="number" value="62" min="0" max="100" style="width: 4em; margin-bottom: 0.5rem;"></p>
+					<spinner options="{id: 'determinate-static', mods: ['determinate'], progress: 62}">
+						<span class="spinner__progress">0%</span>
+					</spinner>
+				</div>
+			</div>
+
+			<div class="example">
+				<h3>Spinning determinate progress spinner</h3>
+				<p>Adding the <code>--is-spinning</code> modifier to a determinate spinner will make it spin.</p>
+				<div class="example__box">
+					<p><button type="button" data-spinner-toggle="determinate-spin">Toggle spin</button></p>
+					<spinner options="{id: 'determinate-spin', mods: ['determinate', 'active']}" sample-determinate-spinner="determinate-spin">
+						<span class="spinner__progress">0%</span>
+					</spinner>
+				</div>
+			</div>
+
+			<div class="example">
+				<h3>Determinate progress spinner</h3>
+				<p>Call <code>spinner.setProgress()</code> method to update a spinner's progress.</p>
+				<div class="example__box">
+					<spinner options="{id: 'determinate', mods: ['determinate']}" sample-determinate-spinner="determinate">
+						<span class="spinner__progress">0%</span>
+					</spinner>
+				</div>
+			</div>
+		</div>
+
+		<h2>Modifications</h2>
+		<h3>Sizes</h3>
+		<div class="examples">
+			<div class="example example--small">
+				<h3>Small</h3>
+				<div class="example__box">
+					<p><button type="button" data-spinner-toggle="small">Toggle</button></p>
+					<spinner options="{id: 'small', mods: ['active', 'small']}"></spinner>
+				</div>
+			</div>
+
+			<div class="example example--large">
+				<h3>Large</h3>
+				<div class="example__box">
+					<p><button type="button" data-spinner-toggle="large">Toggle</button></p>
+					<spinner options="{id: 'large', mods: ['active', 'large']}"></spinner>
+				</div>
+			</div>
+
+			<div class="example">
+				<h3>Inline</h3>
+				<div class="example__box">
+					<p style="max-width: 220px; margin-top: 0;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. <em>Inline spinners <spinner options="{id: 'inline1', mods: ['active', 'inline']}"></spinner> go inline with text or buttons and inherit line height.</em> Ut enim ad minim veniam.</p>
+					<p><button type="button" data-spinner-toggle="inline1">Toggle</button></p>
+					<button type="button" style="padding: 0.5em 1em; background-color: #eee; border: 0.1em solid #ccc; font: inherit;">No clicky, just looky <spinner options="{id: 'inline2', mods: ['active', 'inline']}"></spinner></button>
+					<p><button type="button" data-spinner-toggle="inline2">Toggle</button></p>
+				</div>
+			</div>
+		</div>
+
+		<h3>Styles</h3>
+		<div class="examples">
+			<div class="example">
+				<h3>Dressed</h3>
+				<div class="example__box">
+					<p><button type="button" data-spinner-toggle="dressed">Toggle</button></p>
+					<spinner options="{id: 'dressed', mods: ['active', 'dressed']}"></spinner>
+				</div>
+			</div>
+
+			<div class="example">
+				<h3>Track Color</h3>
+				<div class="example__box example--track-color">
+					<p><button type="button" data-spinner-toggle="track">Toggle</button></p>
+					<spinner options="{id: 'track', mods: ['active']}"></spinner>
+				</div>
+			</div>
+
+			<div class="example">
+				<h3>Fill Color</h3>
+				<div class="example__box example--fill-color">
+					<p><button type="button" data-spinner-toggle="fill">Toggle</button></p>
+					<spinner options="{id: 'fill', mods: ['active']}"></spinner>
+				</div>
+			</div>
+
+			<div class="example example--bar-color">
+				<h3>Bar Color</h3>
+				<div class="example__box">
+					<p><button type="button" data-spinner-toggle="bar">Toggle</button></p>
+					<spinner options="{id: 'bar', mods: ['active']}"></spinner>
+				</div>
+			</div>
+
+			<div class="example">
+				<h3>Bar Multi-Color</h3>
+				<div class="example__box">
+					<p><button type="button" data-spinner-toggle="multicolor">Toggle</button></p>
+					<spinner options="{id: 'multicolor', mods: ['active', 'multicolor']}"></spinner>
+				</div>
+			</div>
+		</div>
+
+		<h3>Position</h3>
+		<div class="examples">
+			<div class="example example--position">
+				<h3>Absolute</h3>
+				<p><button type="button" data-spinner-toggle="position">Toggle</button></p>
+				<div class="example__box">
+					<spinner options="{id: 'position', mods: ['absolute', 'active']}"></spinner>
+				</div>
+			</div>
+
+			<div class="example example--slide">
+				<h3>Slide</h3>
+				<p><button type="button" data-spinner-toggle="slide">Toggle</button></p>
+				<div class="example__box">
+					<spinner options="{id: 'slide', mods: ['slide', 'dressed', 'active']}"></spinner>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+	<script type="text/javascript" src="../../dist/angularjs/spinner.js"></script>
+	<script type="text/javascript" src="./app.js"></script>
+</body>
+</html>

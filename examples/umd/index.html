@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Spinner Example - Vanilla</title>
+	<link rel="stylesheet" type="text/css" href="../../dist/css/spinner.css">
+	<style type="text/css">
+		.page {
+			max-width: 900px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		.examples {
+			display: flex;
+			/*justify-content: center;*/
+			flex-wrap: wrap;
+			margin-bottom: 3rem;
+		}
+		.example {
+			margin-left: 1rem;
+			margin-right: 1rem;
+			max-width: 12rem;
+		}
+		.example__box {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+		.example--track-color .spinner__track {
+			color: hsla(0, 0%, 0%, 0.1);
+		}
+		.example--fill-color .spinner__track {
+			color: hsla(0, 0%, 0%, 0.1);
+			background-color: hsla(0, 0%, 0%, 0.05);
+		}
+		.example--bar-color .spinner__left:after,
+		.example--bar-color .spinner__right:after {
+			border-color: red;
+		}
+		[data-spinner-toggle] {
+			margin-bottom: 0.5rem;
+		}
+		.example--position {
+			max-width: 24rem;
+		}
+		.example--position .example__box,
+		.example--slide .example__box {
+			height: 20rem;
+			width: 20rem;
+			background-color: hsla(0, 0%, 80%, 0.5);
+			position: relative;
+		}
+		.example--slide .example__box {
+			overflow: hidden;
+		}
+	</style>
+</head>
+<body>
+	<div class="page">
+		<div class="page__intro">
+			<h1 class="page__title">Spinner brik - Vanilla</h1>
+			<p style="margin-bottom: 3rem;">This example illustrates using the vanilla JS flavor of spinner as an <em>ES module, compiled with webpack</em>.</p>
+		</div>
+
+		<h2>Base</h2>
+		<div class="examples">
+			<div class="example">
+				<h3>Indeterminate progress spinner</h3>
+				<p>Indeterminate spinners only activate with the <code>--is-spinning</code> modifier class.</p>
+				<div class="example__box">
+					<p><button type="button" data-spinner-toggle="indeterminate">Toggle</button></p>
+					<span class="spinner" data-spinner-id="indeterminate"></span>
+				</div>
+			</div>
+
+			<div class="example">
+				<h3>Static determinate progress</h3>
+				<p>Determinate spinners do not need the <code>--is-spinning</code> modifier. They are active when the <code>[data-progress]</code> attribute exists.</p>
+				<div class="example__box">
+					<p><input type="number" value="62" name="set-progress" id="set-progress__input" min="0" max="100" style="width: 4em; margin-bottom: 0.5rem;"></p>
+					<span class="spinner" data-spinner-id="determinate-static" data-progress="62">
+						<span class="spinner__progress">62%</span>
+					</span>
+				</div>
+			</div>
+
+			<div class="example">
+				<h3>Spinning determinate progress spinner</h3>
+				<p>Adding the <code>--is-spinning</code> modifier to a determinate spinner will make it spin.</p>
+				<div class="example__box">
+					<p><button type="button" data-spinner-toggle="determinate-spin">Toggle spin</button></p>
+					<span class="spinner spinner--is-spinning" data-spinner-id="determinate-spin" data-progress="0">
+						<span class="spinner__progress">0%</span>
+					</span>
+				</div>
+			</div>
+
+			<div class="example">
+				<h3>Determinate progress spinner</h3>
+				<p>Call <code>spinner.setProgress()</code> method to update a spinner's progress.</p>
+				<div class="example__box">
+					<span class="spinner" data-spinner-id="determinate" data-progress="0">
+						<span class="spinner__progress">0%</span>
+					</span>
+				</div>
+			</div>
+		</div>
+
+		<h2>Modifications</h2>
+		<h3>Sizes</h3>
+		<div class="examples">
+			<div class="example example--small">
+				<h3>Small</h3>
+				<div class="example__box">
+					<p><button type="button" data-spinner-toggle="small">Toggle</button></p>
+					<span class="spinner spinner--small" data-spinner-id="small"></span>
+				</div>
+			</div>
+
+			<div class="example example--large">
+				<h3>Large</h3>
+				<div class="example__box">
+					<p><button type="button" data-spinner-toggle="large">Toggle</button></p>
+					<span class="spinner spinner--large" data-spinner-id="large"></span>
+				</div>
+			</div>
+
+			<div class="example">
+				<h3>Inline</h3>
+				<div class="example__box">
+					<p style="max-width: 220px; margin-top: 0;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. <em>Inline spinners <span class="spinner spinner--inline" data-spinner-id="inline1"></span> go inline with text or buttons and inherit line height.</em> Ut enim ad minim veniam.</p>
+					<button type="button" style="padding: 0.5em 1em; background-color: #eee; border: 0.1em solid #ccc; font: inherit;">No clicky, just looky <span class="spinner spinner--inline" data-spinner-id="inline2"></span></button>
+					<p><button type="button" data-spinner-toggle="inline">Toggle</button></p>
+				</div>
+			</div>
+		</div>
+
+		<h3>Styles</h3>
+		<div class="examples">
+			<div class="example">
+				<h3>Dressed</h3>
+				<div class="example__box">
+					<p><button type="button" data-spinner-toggle="dressed">Toggle</button></p>
+					<span class="spinner spinner--dressed" data-spinner-id="dressed"></span>
+				</div>
+			</div>
+
+			<div class="example">
+				<h3>Track Color</h3>
+				<div class="example__box example--track-color">
+					<p><button type="button" data-spinner-toggle="track">Toggle</button></p>
+					<span class="spinner" data-spinner-id="track"></span>
+				</div>
+			</div>
+
+			<div class="example">
+				<h3>Fill Color</h3>
+				<div class="example__box example--fill-color">
+					<p><button type="button" data-spinner-toggle="fill">Toggle</button></p>
+					<span class="spinner" data-spinner-id="fill"></span>
+				</div>
+			</div>
+
+			<div class="example example--bar-color">
+				<h3>Bar Color</h3>
+				<div class="example__box">
+					<p><button type="button" data-spinner-toggle="bar">Toggle</button></p>
+					<span class="spinner" data-spinner-id="bar"></span>
+				</div>
+			</div>
+
+			<div class="example">
+				<h3>Bar Multi-Color</h3>
+				<div class="example__box">
+					<p><button type="button" data-spinner-toggle="multicolor">Toggle</button></p>
+					<span class="spinner spinner--multicolor" data-spinner-id="multicolor"></span>
+				</div>
+			</div>
+		</div>
+
+		<h3>Position</h3>
+		<div class="examples">
+			<div class="example example--position">
+				<h3>Absolute</h3>
+				<p><button type="button" data-spinner-toggle="position">Toggle</button></p>
+				<div class="example__box">
+					<span class="spinner spinner--absolute" data-spinner-id="position"></span>
+				</div>
+			</div>
+
+			<div class="example example--slide">
+				<h3>Slide</h3>
+				<p><button type="button" data-spinner-toggle="slide">Toggle</button></p>
+				<div class="example__box">
+					<span class="spinner spinner--slide spinner--dressed" data-spinner-id="slide"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="../../dist/umd/spinner.js"></script>
+</body>
+</html>

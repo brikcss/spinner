@@ -1,0 +1,507 @@
+/** ------------------------------------------------------------------------------------------------
+ *  @filename  spinner.abstract.scss
+ *  @author  brikcss  <https://github.com/brikcss>
+ *  @description  SASS for Brikcss Spinner.
+ *  @notes  This currently uses the `clip` property, which is deprecated but supported. When a new
+ *      browser discontinues support for that, we will need to do one of the following:
+ *        1. Use the `clip-path` property instead.
+ *        2. Remove `clip`. Instead make borders for of __left and __right :after pseudo elements
+ *           transparent on two sides and make sure the parent has `overflow: hidden`.
+ *  @credit  Thanks to the following for guidance and inspiration:
+ *        - [Andre Firchow - CSS Percentage Circles](http://circle.firchow.net/)
+ *        - [Codepen user Misiu](https://codepen.io/Misiu/pen/MpZvNK)
+ *        - [Material Design](https://material.io/guidelines/components/progress-activity.html)
+ ** --------------------------------------------------------------------------------------------- */
+
+// --------------
+// Configuration.
+//
+// Mods to init.
+$spinner__mods: determinate, small, large, inline, dressed, clean, multicolor, absolute, slide !default;
+$spinner__size: 4rem !default;
+$spinner__border-size: $spinner__size / 10 !default;
+$spinner__size--small: 0.5 !default;
+$spinner__size--large: 1.5 !default;
+$spinner__colors: (
+	stroke: hsl(207, 90%, 54%),
+	fill: transparent,
+	track: transparent,
+	multicolor: hsl(4, 90%, 58%) hsl(207, 90%, 54%) hsl(122, 39%, 49%) hsl(36, 100%, 50%),
+	dressed-bg: hsl(0, 0%, 100%)
+) !default;
+
+// -----------------
+// Helper functions.
+//
+
+/**
+ *  Merge given options with default options.
+ *  @param   {Map}  $options:  ()  Options map.
+ */
+@function default-options($options: ()) {
+	@return map-merge(
+		(
+			base: &,
+			size: $spinner__size,
+			add-dimensions: true,
+			border-size: $spinner__border-size,
+			track-adjustment: 1,
+			colors: $spinner__colors,
+			spin-animation: cubic-bezier(0.4, 0, 0.2, 1),
+			spin-duration: 1.3s,
+			load-animation: cubic-bezier(0.6, 0.5, 0.2, 1.4),
+			load-duration: 250ms,
+			rotation-min: 0.05,
+			rotation-max: 0.8,
+			determinate-selector: data-progress,
+			absolute-top: 2rem
+		),
+		$options
+	);
+}
+
+/**
+ *  Test whether a mod name is equal to or contained in a string or list of mods.
+ *
+ *  @param   {String}  $mod  Value to test.
+ *  @param   {String|List}  $mods  List of mods to check.
+ */
+@function matches-mod($mod, $mods) {
+	@return ($mods == $mod) or (type-of($mods) == list and index($mods, $mod) > 0);
+}
+
+// -------
+// Mixins.
+//
+
+@mixin mod-spinner--size($options: ()) {
+	$base: map-get($options, base);
+	$size: map-get($options, size);
+	$border-size: map-get($options, border-size);
+	$track-size: if(map-get($options, track-size), map-get($options, track-size), $size);
+
+	@if map-get($options, add-dimensions) == true {
+		height: $size;
+		width: $size;
+	}
+
+	#{$base}__track {
+		height: $track-size;
+		width: $track-size;
+	}
+
+	#{$base}__right {
+		&:after {
+			border-width: $border-size;
+			clip: rect(0 (($track-size) / 2) ($track-size) 0);
+		}
+	}
+
+	#{$base}__left {
+		&:after {
+			border-width: $border-size;
+			clip: rect(0 (($track-size) / 2) ($track-size) 0);
+		}
+	}
+}
+
+/**
+ *  Include styles for one or more spinner mod(s).
+ *
+ *  @param   {String|List}  $mods  Name(s) of mod(s) to include.
+ *  @param   {Map}  $options:  ()  Options map.
+ */
+@mixin spinner-mod($mods, $options: ()) {
+	$base: map-get($options, base);
+
+	// Mod to set the size of a spinner.
+	@if matches-mod(small, $mods) {
+		@include mod-spinner--size(
+			map-merge(
+				$options,
+				(
+					size: $spinner__size * $spinner__size--small,
+					border-size: $spinner__border-size * $spinner__size--small
+				)
+			)
+		);
+	} @else if matches-mod(large, $mods) {
+		@include mod-spinner--size(
+			map-merge(
+				$options,
+				(
+					size: $spinner__size * $spinner__size--large,
+					border-size: $spinner__border-size * $spinner__size--large
+				)
+			)
+		);
+	}
+
+	// Mod to make spinner determinate. That is, to turn it into a progress indicator spinner.
+	@if matches-mod(determinate, $mods) {
+		$selector: map-get($options, determinate-selector);
+
+		// Reset properties from base spinner.
+		&[#{$selector}] {
+			transform: scale(1);
+
+			#{$base}__track,
+			#{$base}__left,
+			#{$base}__left:after,
+			#{$base}__right,
+			#{$base}__right:after {
+				animation: none;
+			}
+		}
+
+		&#{$base}--is-spinning[#{$selector}] {
+			#{$base}__track {
+				animation: rotate-spinner map-get($options, spin-duration) linear infinite;
+			}
+		}
+
+		// Selectors for determinate spinner values (1-100).
+		@if ($selector != false) {
+			// For indicator percentages 0 to 50:
+			@for $i from 1 through 50 {
+				&[#{$selector}='#{$i}'] {
+					#{$base}__right:after {
+						transform: rotate((360 / 100 * $i) + deg);
+					}
+				}
+			}
+
+			// For indicator percentages 51 to 100:
+			@for $i from 51 through 100 {
+				&[#{$selector}='#{$i}'] {
+					#{$base}__right:after {
+						transform: rotate(180deg);
+						transition: none;
+					}
+
+					#{$base}__left:after {
+						transform: rotate((360 / 100 * $i) + deg);
+					}
+				}
+			}
+		}
+	}
+
+	// Mod to dress spinner with a background and padding.
+	@if matches-mod(dressed, $mods) {
+		$size: map-get($options, size);
+		$colors: map-get($options, colors);
+
+		background-color: map-get($colors, dressed-bg);
+		box-shadow: 0 ($size / 28) ($size / 24) hsla(0, 0%, 0%, 0.2),
+			0 ($size / 16) ($size / 12) hsla(0, 0%, 0%, 0.15);
+		padding: 1.5rem;
+
+		@include mod-spinner--size(map-merge($options, (track-size: 2.5rem, border-size: 0.25rem)));
+	}
+
+	// Mod to create a "clean" spinner (resets dressed styles).
+	@if matches-mod(clean, $mods) {
+		background-color: transparent;
+		box-shadow: none;
+		padding: 0;
+
+		@include mod-spinner--size($options);
+	}
+
+	// Mod to make a spinner fit with inline elements, such as in a button or inline text.
+	@if matches-mod(inline, $mods) {
+		@include mod-spinner--size(map-merge($options, (size: 1em, border-size: 0.15em)));
+		background-color: transparent;
+		box-shadow: none;
+		padding: 0;
+		display: inline-block;
+		vertical-align: top;
+		width: 0;
+		overflow: hidden;
+
+		#{$base}__track {
+			left: 0;
+			top: 0;
+		}
+
+		&#{$base}--is-spinning {
+			width: 1em;
+			transition-delay: 0s;
+		}
+	}
+
+	// Mod to make spinner bars multicolored.
+	@if matches-mod(multicolor, $mods) {
+		&#{$base}--is-spinning {
+			#{$base}__left:after {
+				animation: rotate-left-bar
+						map-get($options, spin-duration)
+						map-get($options, spin-animation)
+						infinite,
+					rotate-spinner-colors
+						(map-get($options, spin-duration) * 6)
+						ease-in-out
+						infinite;
+			}
+
+			#{$base}__right:after {
+				animation: rotate-right-bar
+						map-get($options, spin-duration)
+						map-get($options, spin-animation)
+						infinite,
+					rotate-spinner-colors
+						(map-get($options, spin-duration) * 6)
+						ease-in-out
+						infinite;
+			}
+		}
+
+		@keyframes rotate-spinner-colors {
+			$animation-colors: map-get(map-get($options, colors), multicolor);
+			$n: 0;
+
+			@each $color in $animation-colors {
+				$i: index($animation-colors, $color);
+				// stylelint-disable-next-line selector-descendant-combinator-no-non-space
+				#{100 / length($animation-colors) * ($i - 1)}% {
+					border-color: $color;
+				}
+			}
+
+			100% {
+				border-color: nth($animation-colors, 1);
+			}
+		}
+	}
+
+	// Mod to position spinner absolutely to an element.
+	@if matches-mod(absolute, $mods) {
+		position: absolute;
+		top: map-get($options, absolute-top);
+	}
+
+	// Mod to transition spinner from top overflow of containing element.
+	@if matches-mod(slide, $mods) {
+		position: absolute;
+		top: -#{map-get($options, size) - 1rem};
+
+		&#{$base}--is-spinning {
+			top: map-get($options, absolute-top);
+		}
+	}
+}
+
+/**
+ *  Include spinner styles for a default type and optionally add modifier classes.
+ *
+ *  @param   {List}  $type:  ()  Mod types to include as default styles.
+ *  @param   {List}  $mods:  $spinner__mods  List of mods to add modifier classes for.
+ *  @param   {Boolean}  $add-base:  false  Add base spinner styles. If no types are set,
+ *      automatically set to true.
+ *  @param   {Boolean}  $add-animation:  false  Add animation styles. Should typically only be added
+ *      once. If no types are set, automatically set to true.
+ *  @param   {Map}  $options:  ()  Options map.
+ */
+@mixin spinner(
+	$type: (),
+	$mods: $spinner__mods,
+	$add-base: false,
+	$add-animation: false,
+	$options: ()
+) {
+	// Set default options.
+	$options: default-options($options);
+	$base: map-get($options, base);
+	$colors: map-get($options, colors);
+	$size: map-get($options, size);
+	$load-duration: map-get($options, load-duration);
+	$load-animation: map-get($options, load-animation);
+	$spin-duration: map-get($options, spin-duration);
+	$spin-animation: map-get($options, spin-animation);
+
+	// If type is not set, add base and animation styles by default.
+	@if length($type) == 0 {
+		$add-base: true;
+		$add-animation: true;
+	}
+
+	// Add base spinner styles.
+	@if $add-base == true {
+		height: $size;
+		width: $size;
+		box-sizing: border-box;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+		will-change: transform, width, top;
+		transform: scale(0);
+		transform-origin: center;
+		transition: transform $load-duration $load-animation,
+			width $load-duration $load-animation ($load-duration / 2),
+			top $load-duration $load-animation;
+
+		// Spinner track.
+		&__track {
+			box-sizing: border-box;
+			border-radius: 50%;
+			@if (map-has-key($colors, track)) {
+				box-shadow: inset 0 0 0 map-get($options, border-size);
+				color: map-get($colors, track);
+			}
+			@if (map-has-key($colors, fill)) {
+				background-color: map-get($colors, fill);
+			}
+			position: absolute;
+			height: $size;
+			width: $size;
+			animation: rotate-spinner $spin-duration linear infinite;
+			transform-origin: center;
+		}
+
+		// Spinner left/right bars.
+		&__right,
+		&__left {
+			position: absolute;
+			top: 0;
+			height: 100%;
+			width: 50%;
+			overflow: hidden;
+
+			&:after {
+				content: '';
+				clip: rect(0 $size / 2 $size 0);
+				border: map-get($options, border-size) solid map-get($colors, stroke);
+				border-radius: 50%;
+				box-sizing: border-box;
+				height: 100%;
+				width: 200%;
+				position: absolute;
+				left: 0;
+				top: 0;
+				transition: transform 0.15s ease-in-out;
+			}
+		}
+
+		&__right {
+			right: 0;
+			transform-origin: center left;
+			animation: rotate-spinner-offset ($spin-duration * 4) $spin-animation infinite;
+
+			&:after {
+				animation: rotate-right-bar $spin-duration $spin-animation infinite;
+				left: -100%;
+			}
+		}
+
+		&__left {
+			left: 0;
+			transform-origin: center right;
+			animation: rotate-spinner-offset ($spin-duration * 4) $spin-animation infinite;
+
+			&:after {
+				animation: rotate-left-bar $spin-duration $spin-animation infinite;
+				transform: rotate(180deg);
+			}
+		}
+
+		&__progress {
+			position: relative;
+			z-index: 1;
+		}
+
+		// Active state.
+		&--is-spinning {
+			transform: scale(1);
+		}
+	}
+
+	// Add animation. This is under its own options flag because it should only be added once.
+	@if $add-animation == true {
+		@keyframes rotate-left-bar {
+			0%,
+			100% {
+				transform: rotate(-(180 + 180 * map-get($options, rotation-min)) + deg);
+			}
+
+			50% {
+				transform: rotate(-(180 + 180 * map-get($options, rotation-max)) + deg);
+			}
+		}
+
+		@keyframes rotate-right-bar {
+			0%,
+			100% {
+				transform: rotate((180 * map-get($options, rotation-min)) + deg);
+			}
+
+			50% {
+				transform: rotate((180 * map-get($options, rotation-max)) + deg);
+			}
+		}
+
+		@keyframes rotate-spinner {
+			0% {
+				transform: rotate(0deg);
+			}
+
+			50% {
+				transform: rotate(180deg);
+			}
+
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+
+		@keyframes rotate-spinner-offset {
+			12.5% {
+				transform: rotate(135deg);
+			}
+
+			25% {
+				transform: rotate(270deg);
+			}
+
+			37.5% {
+				transform: rotate(405deg);
+			}
+
+			50% {
+				transform: rotate(540deg);
+			}
+
+			62.5% {
+				transform: rotate(675deg);
+			}
+
+			75% {
+				transform: rotate(810deg);
+			}
+
+			87.5% {
+				transform: rotate(945deg);
+			}
+
+			100% {
+				transform: rotate(1080deg);
+			}
+		}
+	}
+
+	// Set default styles.
+	@if length($type) > 0 {
+		@each $mod in $type {
+			@include spinner-mod($mod, map-merge($options, (base: $base)));
+		}
+	}
+
+	// Include each mod as a class modifier.
+	@each $mod in $mods {
+		&--#{$mod} {
+			@include spinner-mod($mod, map-merge($options, (base: $base)));
+		}
+	}
+}

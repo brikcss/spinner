@@ -1,0 +1,107 @@
+{
+	"name": "@brikcss/spinner",
+	"version": "0.0.1",
+	"description": "Loading activity spinner icon. Patterned after Material Design's circular activity indicator.",
+	"author": "Brikcss <https://github.com/brikcss>",
+	"contributors": [
+		"The Zimmee <thezimmee@gmail.com>"
+	],
+	"homepage": "https://github.com/brikcss/spinner",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/brikcss/spinner.git"
+	},
+	"bugs": {
+		"url": "https://github.com/brikcss/spinner/issues"
+	},
+	"keywords": [
+		"brikcss",
+		"brik-ui",
+		"ui",
+		"css",
+		"js",
+		"activity indicator",
+		"progress indicator",
+		"spinner",
+		"loader",
+		"loading",
+		"icons"
+	],
+	"main": "./dist/commonjs/spinner.min.js",
+	"module": "./dist/esmodule/spinner.min.js",
+	"browser": "./dist/vanillajs/spinner.min.js",
+	"umd": "./dist/umd/spinner.min.js",
+	"files": [
+		"dist",
+		"examples"
+	],
+	"publishConfig": {
+		"tag": "dev",
+		"access": "public"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "NODE_ENV=production node ./node_modules/.bin/pre-commit-lint",
+			"commit-msg": "commitlint -e $GIT_PARAMS && . ./node_modules/.bin/commit-msg-stamp-branch ${GIT_PARAMS}",
+			"pre-push": ". ./node_modules/.bin/pre-push-check-stage && echo \"\n[ok] Pushing code...\""
+		}
+	},
+	"scripts": {
+		"start": "npm run watch",
+		"prebuild": "rimraf dist",
+		"build": "concurrently \"npm run build:js\" \"npm run build:css\"",
+		"preprod": "npm run test",
+		"prod": "cross-env NODE_ENV=production npm run build",
+		"test": "npm run test:lint",
+		"test:lint": "concurrently \"npm run lint:js\" \"npm run lint:css\" && echo \"\n[ok] Linter complete.\n\"",
+		"test:unit": "node ./node_modules/.bin/mocha \"./test/*.spec.js\" --reporter=mocha-better-spec-reporter --colors",
+		"test:coverage": "nyc --reporter=lcov --reporter=text mocha \"./test/*.spec.js\" --recursive",
+		"test:report": "concurrently \"cat coverage/lcov.info | codacy-coverage\" \"cat coverage/lcov.info | coveralls\"",
+		"prewatch": "npm run build:css",
+		"watch": "concurrently \"npm run build:css -- --watch\" \"npm run build:js -- --watch\" \"npm run serve\"",
+		"lint:css": "node ./node_modules/.bin/stylelint src/**/*.{.css,.scss} --format=stylish",
+		"postlint:css": "echo \"[ok] CSS lint complete.\"",
+		"lint:js": "node ./node_modules/.bin/eslint ./src/**/*.js",
+		"postlint:js": "echo \"[ok] JS lint complete.\"",
+		"build:css": "stak --config=.stakcssrc.js:all",
+		"build:js": "rollup --config=.rolluprc.js",
+		"serve": "browser-sync start --config ./.browsersyncrc.js",
+		"semantic-release": "semantic-release"
+	},
+	"devDependencies": {
+		"@brikcss/git-hooks": "1.x",
+		"@brikcss/stakcss": "0.x",
+		"@brikcss/stakcss-bundler-copy": "0.x",
+		"@brikcss/stakcss-bundler-postcss": "0.x",
+		"@brikcss/stakcss-bundler-sass": "0.x",
+		"@brikcss/watcher-cli": "0.x",
+		"@commitlint/cli": "6.x",
+		"autoprefixer": "8.x",
+		"babel-core": "6.x",
+		"babel-plugin-external-helpers": "6.x",
+		"babel-preset-env": "1.x",
+		"browser-sync": "2.x",
+		"codacy-coverage": "2.x",
+		"concurrently": "3.x",
+		"coveralls": "3.x",
+		"cross-env": "5.x",
+		"cssnano": "3.x",
+		"eslint": "4.x",
+		"mocha": "5.x",
+		"mocha-better-spec-reporter": "3.x",
+		"nyc": "11.x",
+		"postcss-reporter": "5.x",
+		"prettier": "1.x",
+		"rimraf": "2.x",
+		"rollup": "0.x",
+		"rollup-plugin-babel": "3.x",
+		"rollup-plugin-commonjs": "9.x",
+		"rollup-plugin-node-resolve": "3.x",
+		"rollup-plugin-prettier": "0.x",
+		"rollup-plugin-uglify": "3.x",
+		"semantic-release": "15.x",
+		"stylelint": "9.x",
+		"stylelint-formatter-pretty": "1.x",
+		"stylelint-scss": "2.x"
+	}
+}
