@@ -4,11 +4,6 @@
  *  @author  brikcss  <https://github.com/brikcss>
  *  @description  AngularJS directive to toggle a BrikCSS.Spinner.
  ** --------------------------------------------------------------------------------------------- */
-/* globals angular */
-
-angular
-	.module('brikcss.spinner.toggle-directive', [])
-	.directive('spinnerToggle', ['spinnerService', toggleSpinnerDirective]);
 
 function toggleSpinnerDirective(spinnerService) {
 	return {
@@ -33,3 +28,5 @@ function toggleSpinnerDirective(spinnerService) {
 		}
 	};
 }
+
+export default toggleSpinnerDirective;

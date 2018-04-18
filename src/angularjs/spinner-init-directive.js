@@ -4,11 +4,6 @@
  *  @author  brikcss  <https://github.com/brikcss>
  *  @description  AngularJS directive to instantiate a new BrikCSS.Spinner.
  ** --------------------------------------------------------------------------------------------- */
-/* globals angular */
-
-angular
-	.module('brikcss.spinner.init-directive', [])
-	.directive('spinner', ['spinnerService', spinnerDirective]);
 
 function spinnerDirective(spinnerService) {
 	return {
@@ -28,3 +23,5 @@ function spinnerDirective(spinnerService) {
 		}
 	};
 }
+
+export default spinnerDirective;

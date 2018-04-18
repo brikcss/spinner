@@ -1,6 +1,6 @@
 {
 	"name": "@brikcss/spinner",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Loading activity spinner icon. Patterned after Material Design's circular activity indicator.",
 	"author": "Brikcss <https://github.com/brikcss>",
 	"contributors": [
@@ -76,6 +76,7 @@
 		"@brikcss/stakcss-bundler-sass": "0.x",
 		"@brikcss/watcher-cli": "0.x",
 		"@commitlint/cli": "6.x",
+		"angular": "1.x",
 		"autoprefixer": "8.x",
 		"babel-core": "6.x",
 		"babel-plugin-external-helpers": "6.x",
