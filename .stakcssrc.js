@@ -46,7 +46,24 @@ if (isProd) {
 		source: 'src/angularjs/*.js',
 		output: './dist/angularjs/esmodule/',
 		cwd: 'src/angularjs',
-		bundlers: ['@brikcss/copy']
+		bundlers: [
+			'@brikcss/copy',
+			(config) => {
+				// Replace the import path for the angularjs > esmodule.
+				if (
+					config.content &&
+					config.source.length === 1 &&
+					config.source[0] === 'src/angularjs/spinner-service.js'
+				) {
+					config.content = config.content.toString();
+					config.content = config.content.replace(
+						'../module/spinner',
+						'../../esmodule/spinner'
+					);
+				}
+				return config;
+			}
+		]
 	};
 }
 
