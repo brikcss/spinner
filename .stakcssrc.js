@@ -40,6 +40,14 @@ if (isProd) {
 		cwd: 'src/sass',
 		bundlers: ['@brikcss/copy']
 	};
+
+	// Add AngularJS source so it can be imported as modules.
+	profiles.angularjs = {
+		source: 'src/angularjs/*.js',
+		output: './dist/angularjs/src/',
+		cwd: 'src/angularjs',
+		bundlers: ['@brikcss/copy']
+	};
 }
 
 module.exports = profiles;

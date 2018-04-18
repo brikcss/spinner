@@ -100,7 +100,7 @@ let configs = [
 		input: 'src/angularjs/index.js',
 		output: {
 			name: `brikcss.${lib}`,
-			file: `./dist/angularjs/${lib}.js`,
+			file: `./dist/angularjs/bundle/${lib}.js`,
 			format: 'umd'
 		},
 		plugins: [
