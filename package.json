@@ -1,6 +1,6 @@
 {
 	"name": "@brikcss/spinner",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Loading activity spinner icon. Patterned after Material Design's circular activity indicator.",
 	"author": "Brikcss <https://github.com/brikcss>",
 	"contributors": [

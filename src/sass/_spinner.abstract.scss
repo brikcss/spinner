@@ -197,7 +197,9 @@ $spinner__colors: (
 			0 ($size / 16) ($size / 12) hsla(0, 0%, 0%, 0.15);
 		padding: 1.5rem;
 
-		@include mod-spinner--size(map-merge($options, (track-size: 2.5rem, border-size: 0.25rem)));
+		@include mod-spinner--size(
+			map-merge($options, (track-size: $size * 0.625, border-size: $size / 16))
+		);
 	}
 
 	// Mod to create a "clean" spinner (resets dressed styles).
