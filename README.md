@@ -1,5 +1,7 @@
 # Activity Spinner Icon
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/brikcss/spinner.svg)](https://greenkeeper.io/)
+
 > Loading activity spinner icon. Patterned after Material Design's [circular activity indicator](https://material.io/guidelines/components/progress-activity.html#progress-activity-types-of-indicators).
 
 <!-- Shields. -->
